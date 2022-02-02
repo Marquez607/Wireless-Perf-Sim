@@ -24,3 +24,4 @@ This is the ns3 source code directly with a few scripts I've tried out in the sc
 Papers that I've found so far that have some relevant issue or can be used to extrapolate what kind of KPIs (Key Performance Indicators ) we can extend our framework to evaluate. 
 
 # Motivator
+# Task List

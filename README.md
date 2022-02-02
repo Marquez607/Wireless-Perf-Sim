@@ -9,6 +9,8 @@ This section includes relevant links to understanding the project. Please review
 ## ns3 tutorial: 
 Full tutorial: https://www.nsnam.org/docs/tutorial/html/
 Wireless Topology Example: https://www.nsnam.org/docs/tutorial/html/building-topologies.html#building-a-wireless-network-topology
+GitLab (Original Source Code): https://gitlab.com/nsnam/ns-3-dev
+MANET Example: https://gitlab.com/nsnam/ns-3-dev/-/blob/master/examples/routing/manet-routing-compare.cc
 
 ## Geeksforgeeks: 
 Intro to Ad Hoc Networks: https://www.geeksforgeeks.org/introduction-of-mobile-ad-hoc-network-manet/

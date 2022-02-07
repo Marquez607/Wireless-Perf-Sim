@@ -12,6 +12,10 @@ Wireless Topology Example: https://www.nsnam.org/docs/tutorial/html/building-top
 GitLab (Original Source Code): https://gitlab.com/nsnam/ns-3-dev
 MANET Example: https://gitlab.com/nsnam/ns-3-dev/-/blob/master/examples/routing/manet-routing-compare.cc
 
+### Running NS3 Scripts
+I believe there's technically two tools available for running ns3 scripts. In the tutorial it uses ``` ./ns3 ``` ,but I've had more success with using ``` ./waf ```. 
+Link: https://www.nsnam.org/develop/tools/waf/
+
 ## Geeksforgeeks: 
 Intro to Ad Hoc Networks: https://www.geeksforgeeks.org/introduction-of-mobile-ad-hoc-network-manet/
 MANET Routing: https://www.geeksforgeeks.org/manet-routing-protocols/

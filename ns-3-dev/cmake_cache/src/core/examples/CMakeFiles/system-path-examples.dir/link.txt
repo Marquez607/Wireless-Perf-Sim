@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/system-path-examples.dir/system-path-examples.cc.o  -o ../../../../build/src/core/examples/ns3-dev-system-path-examples-debug  -Wl,-rpath,/home/marquez/Desktop/EEL6591/simulator/ns-3-dev/build/lib -Wl,--no-as-needed ../../../../build/lib/libns3-dev-core-debug.so -Wl,--as-needed -Wl,--no-as-needed 

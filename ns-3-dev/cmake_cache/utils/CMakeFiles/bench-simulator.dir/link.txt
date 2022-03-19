@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/bench-simulator.dir/bench-simulator.cc.o  -o ../../build/utils/ns3-dev-bench-simulator-debug  -Wl,-rpath,/home/marquez/Desktop/EEL6591/simulator/ns-3-dev/build/lib ../../build/lib/libns3-dev-core-debug.so -Wl,--no-as-needed -Wl,--as-needed 

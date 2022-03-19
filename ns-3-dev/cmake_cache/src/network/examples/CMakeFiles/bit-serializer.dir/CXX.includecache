@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../build/include/ns3/bit-deserializer.h
+vector
+-
+deque
+-
+
+../build/include/ns3/bit-serializer.h
+vector
+-
+
+/home/marquez/Desktop/EEL6591/simulator/ns-3-dev/src/network/examples/bit-serializer.cc
+iostream
+-
+ns3/bit-serializer.h
+/home/marquez/Desktop/EEL6591/simulator/ns-3-dev/src/network/examples/ns3/bit-serializer.h
+ns3/bit-deserializer.h
+/home/marquez/Desktop/EEL6591/simulator/ns-3-dev/src/network/examples/ns3/bit-deserializer.h
+

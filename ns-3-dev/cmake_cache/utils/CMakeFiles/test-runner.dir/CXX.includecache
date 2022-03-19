@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../build/include/ns3/system-wall-clock-ms.h
+stdint.h
+-
+
+../build/include/ns3/test.h
+iostream
+-
+fstream
+-
+sstream
+-
+string
+-
+vector
+-
+list
+-
+limits
+-
+stdint.h
+-
+system-wall-clock-ms.h
+../build/include/ns3/system-wall-clock-ms.h
+
+/home/marquez/Desktop/EEL6591/simulator/ns-3-dev/utils/test-runner.cc
+ns3/test.h
+/home/marquez/Desktop/EEL6591/simulator/ns-3-dev/utils/ns3/test.h
+

@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../build/include/ns3/gnuplot.h
+string
+-
+vector
+-
+utility
+-
+
+/home/marquez/Desktop/EEL6591/simulator/ns-3-dev/src/stats/examples/gnuplot-example.cc
+fstream
+-
+ns3/gnuplot.h
+/home/marquez/Desktop/EEL6591/simulator/ns-3-dev/src/stats/examples/ns3/gnuplot.h
+

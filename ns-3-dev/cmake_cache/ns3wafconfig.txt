@@ -1,0 +1,45 @@
+---- Summary of optional NS-3 features:
+Build profile                 : debug
+Build directory               : /home/marquez/Desktop/EEL6591/simulator/ns-3-dev/build
+BRITE Integration             : OFF (missing dependency)
+DES Metrics event collection  : OFF (not requested)
+DPDK NetDevice                : OFF (missing dependency)
+Emulation FdNetDevice         : ON
+Examples                      : ON
+File descriptor NetDevice     : ON
+GNU Scientific Library (GSL)  : OFF (missing dependency)
+GtkConfigStore                : OFF (missing dependency)
+MPI Support                   : OFF (not requested)
+NS-3 Click Integration        : OFF (missing dependency)
+NS-3 OpenFlow Integration     : OFF (missing dependency)
+Netmap emulation FdNetDevice  : OFF (missing dependency)
+PyViz visualizer              : OFF (missing dependency)
+Python Bindings               : OFF (not requested)
+Real Time Simulator           : ON
+SQLite stats support          : OFF (missing dependency)
+Tap Bridge                    : ON
+Tap FdNetDevice               : ON
+Tests                         : ON
+Threading Primitives          : ON
+
+
+Modules configured to be built:
+antenna                   aodv                      applications              
+bridge                    buildings                 config-store              
+core                      csma                      csma-layout               
+dsdv                      dsr                       energy                    
+fd-net-device             flow-monitor              internet                  
+internet-apps             lr-wpan                   lte                       
+mesh                      mobility                  netanim                   
+network                   nix-vector-routing        olsr                      
+point-to-point            point-to-point-layout     propagation               
+sixlowpan                 spectrum                  stats                     
+tap-bridge                test                      topology-read             
+traffic-control           uan                       virtual-net-device        
+wave                      wifi                      wimax                     
+
+
+Modules that cannot be built:
+brite                     click                     mpi                       
+openflow                  visualizer                
+

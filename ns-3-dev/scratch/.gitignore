@@ -3,4 +3,5 @@
 !.gitignore
 !subdir/
 !scratch-simulator.cc
+!IoT-Latency-Sim
 !CMakeLists.txt

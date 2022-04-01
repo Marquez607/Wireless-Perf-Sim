@@ -7563,5 +7563,15 @@
     "directory": "/home/marquez/Desktop/EEL6591/Wireless-Perf-Sim/ns-3-dev/build",
     "command": "/usr/bin/g++ -O0 -ggdb -g3 -Wall -Werror -std=c++17 -fstrict-aliasing -Wstrict-aliasing -pthread -I. -I/usr/include -DNS3_BUILD_PROFILE_DEBUG -DNS3_ASSERT_ENABLE -DNS3_LOG_ENABLE -DHAVE_SYS_IOCTL_H=1 -DHAVE_IF_NETS_H=1 -DHAVE_NET_ETHERNET_H=1 -DHAVE_PACKET_H=1 -DHAVE_SEMAPHORE_H=1 -DHAVE_IF_TUN_H=1 -DNS3_ENABLE_EXAMPLES ../scratch/mythird.cc -c -o/home/marquez/Desktop/EEL6591/Wireless-Perf-Sim/ns-3-dev/build/scratch/mythird.cc.1.o -DHAVE_BOOST",
     "file": "../scratch/mythird.cc"
+  },
+  {
+    "directory": "/home/marquez/Desktop/EEL6591/Wireless-Perf-Sim/ns-3-dev/build",
+    "command": "/usr/bin/g++ -O0 -ggdb -g3 -Wall -Werror -std=c++17 -fstrict-aliasing -Wstrict-aliasing -pthread -I. -I/usr/include -DNS3_BUILD_PROFILE_DEBUG -DNS3_ASSERT_ENABLE -DNS3_LOG_ENABLE -DHAVE_SYS_IOCTL_H=1 -DHAVE_IF_NETS_H=1 -DHAVE_NET_ETHERNET_H=1 -DHAVE_PACKET_H=1 -DHAVE_SEMAPHORE_H=1 -DHAVE_IF_TUN_H=1 -DNS3_ENABLE_EXAMPLES ../scratch/Hardware_Perf_Sim.cc -c -o/home/marquez/Desktop/EEL6591/Wireless-Perf-Sim/ns-3-dev/build/scratch/Hardware_Perf_Sim.cc.2.o -DHAVE_BOOST",
+    "file": "../scratch/Hardware_Perf_Sim.cc"
+  },
+  {
+    "directory": "/home/marquez/Desktop/EEL6591/Wireless-Perf-Sim/ns-3-dev/build",
+    "command": "/usr/bin/g++ -O0 -ggdb -g3 -Wall -Werror -std=c++17 -fstrict-aliasing -Wstrict-aliasing -pthread -I. -I/usr/include -DNS3_BUILD_PROFILE_DEBUG -DNS3_ASSERT_ENABLE -DNS3_LOG_ENABLE -DHAVE_SYS_IOCTL_H=1 -DHAVE_IF_NETS_H=1 -DHAVE_NET_ETHERNET_H=1 -DHAVE_PACKET_H=1 -DHAVE_SEMAPHORE_H=1 -DHAVE_IF_TUN_H=1 -DNS3_ENABLE_EXAMPLES ../scratch/IoT-Latency-Sim/Hardware_Perf_Sim.cc -c -o/home/marquez/Desktop/EEL6591/Wireless-Perf-Sim/ns-3-dev/build/scratch/IoT-Latency-Sim/Hardware_Perf_Sim.cc.7.o -DHAVE_BOOST",
+    "file": "../scratch/IoT-Latency-Sim/Hardware_Perf_Sim.cc"
   }
 ]

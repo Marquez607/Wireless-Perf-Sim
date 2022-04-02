@@ -13,6 +13,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <stdint.h>
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
 #include "ns3/internet-module.h"
@@ -32,12 +33,13 @@ namespace ns3
   {
   public:
     IoTHardwareSim ();
-    void Run (int nSinks, double txp, std::string CSVfileName);
+    void Run (std::string CSVfileName);
     //static void SetMACParam (ns3::NetDeviceContainer & devices,
     //                                 int slotDistance);
     std::string CommandSetup (int argc, char **argv);
 
   private:
+
 
     /* event call backs for logging */
     Ptr<Socket> SetupPacketReceive (Ipv4Address addr, Ptr<Node> node);
@@ -50,11 +52,13 @@ namespace ns3
     uint32_t packetsReceived;
 
     std::string m_CSVfileName;
-    int m_nSinks;
     std::string m_protocolName;
     double m_txp;
-    bool m_traceMobility;
     uint32_t m_protocol;
+    uint32_t m_hops; /*how many intermediate nodes between sink and source*/ 
+    bool m_bidir;
+    // bool m_tracing;
+    // bool m_verbose;
   };
 
 }

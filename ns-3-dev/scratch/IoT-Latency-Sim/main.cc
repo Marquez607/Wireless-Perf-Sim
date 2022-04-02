@@ -1,15 +1,11 @@
-/*************************************************
+/********************************************************************
  * Name: IoT Latency Sim
  * Author: Marquez Jones
  * Desc: This simulation is designed to test End-to-End delay 
  *       for multihop mesh system with the goal of providing a tool 
  *       that analyzes hardware impact on the network design for IoT
  *       Applications 
- * 
- *  
- * 
- * 
- ************************************************/
+ ********************************************************************/
 
 #include <iostream>
 #include <fstream>
@@ -25,25 +21,16 @@
 #include "ns3/ipv4-global-routing-helper.h"
 #include "ns3/flow-monitor-module.h"
 
-using namespace ns3;
+#include "iot-sim.h"
 
-NS_LOG_COMPONENT_DEFINE ("IoT Latency Sim");
+using namespace ns3;
 
 int
 main(int argc,char *argv[])
 {
+  IoTHardwareSim experiment;
+  std::string CSVfileName = experiment.CommandSetup (argc,argv);
 
-  bool verbose = true;
-  uint32_t nCsma = 3;
-  uint32_t nWifi = 3;
-  bool tracing = false;
-
-  CommandLine cmd (__FILE__);
-  cmd.AddValue ("nCsma", "Number of \"extra\" CSMA nodes/devices", nCsma);
-  cmd.AddValue ("nWifi", "Number of wifi STA devices", nWifi);
-  cmd.AddValue ("verbose", "Tell echo applications to log if true", verbose);
-  cmd.AddValue ("tracing", "Enable pcap tracing", tracing);
-  cmd.Parse (argc,argv);
-
+  experiment.Run (CSVfileName);
   return 0;
 }

@@ -45,6 +45,7 @@
 #include "ns3/internet-apps-module.h"
 #include "ns3/point-to-point-module.h"
 #include "ns3/mesh-helper.h"
+#include "ns3/csma-module.h"
 
 #include "iot-sim.h"
 
@@ -192,8 +193,12 @@ namespace ns3
     std::vector<Ipv4InterfaceContainer> interfaces;
     interfaces.resize (numNodes-1);
 
-    PointToPointHelper p2p;
-    p2p.SetDeviceAttribute ("DataRate", StringValue ("16Mbps"));
+    // PointToPointHelper p2p;
+    // p2p.SetDeviceAttribute ("DataRate", StringValue ("16Mbps"));
+
+    CsmaHelper csma;
+    csma.SetChannelAttribute ("DataRate", DataRateValue (5000000));
+    csma.SetChannelAttribute ("Delay", TimeValue (MilliSeconds (0)));
 
     for(size_t i=0;i < links.size();i++)
     {
@@ -203,8 +208,8 @@ namespace ns3
 
       /* install channel on link */   
       // devices[i] = wifi.Install (wifiPhy, wifiMac, links[i]);
-      devices[i] = p2p.Install (links[i]);
       // devices[i] = mesh.Install (wifiPhy, links[i]);
+      devices[i] = csma.Install (links[i]);
 
       /* assign addresses */
       char base_addr[20];
@@ -246,7 +251,7 @@ namespace ns3
 
       }
 
-    Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
+    //Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
 
     NS_LOG_INFO ("Run Simulation.");
     Simulator::Stop (Seconds (60));

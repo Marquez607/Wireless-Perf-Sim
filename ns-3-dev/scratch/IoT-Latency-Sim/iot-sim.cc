@@ -15,6 +15,11 @@
  * Nodes will emulate below system for now (not technically mesh): CC3235
  * Datarate : 16Mbps UDP : 13Mbps TCP
  * https://www.ti.com/lit/ds/symlink/cc3235s.pdf?ts=1648917856121&ref_url=https%253A%252F%252Fwww.ti.com%252Fproduct%252FCC3235S
+ *
+ * Network topoloy
+ * 
+ * SRC -- Hops -- DEST
+ * 
  * *************************************************************************/
 
 #include <fstream>
@@ -32,6 +37,10 @@
 #include "ns3/applications-module.h"
 #include "ns3/yans-wifi-helper.h"
 #include "ns3/flow-monitor-module.h"
+#include "ns3/ipv4-static-routing-helper.h"
+#include "ns3/ipv4-routing-table-entry.h"
+#include "ns3/internet-apps-module.h"
+#include "ns3/point-to-point-module.h"
 
 #include "iot-sim.h"
 
@@ -45,7 +54,7 @@ namespace ns3
     bytesTotal (0),
     packetsReceived (0),
     m_CSVfileName ("manet-routing.output.csv"),
-    m_protocol (2), // AODV
+    m_protocol (4), // RIP not adhoc routing
     m_hops (1),
     m_bidir(false),
     m_printRoutingTable(false)
@@ -58,7 +67,7 @@ namespace ns3
     CommandLine cmd (__FILE__);
     cmd.AddValue ("CSVfileName", "The name of the CSV output file name", m_CSVfileName);
     cmd.AddValue ("hops", "How many intermediate nodes between sink and source", m_hops);
-    cmd.AddValue ("protocol", "1=OLSR;2=AODV;3=DSDV,4=DSR", m_protocol);
+    cmd.AddValue ("protocol", "1=OLSR;2=AODV;3=DSDV,4=RIP", m_protocol);
     cmd.AddValue ("Bidir", "Bidirectional End-to-End test enable[false]", m_bidir);
     cmd.AddValue ("printRoutingTable", "Print routing table for each node[false]", m_printRoutingTable);
     cmd.Parse (argc, argv);
@@ -101,6 +110,7 @@ namespace ns3
     DsdvHelper dsdv;
     DsrHelper dsr;
     DsrMainHelper dsrMain;
+    RipHelper ripRouting;
     Ipv4ListRoutingHelper list;
 
     switch (m_protocol)
@@ -118,32 +128,24 @@ namespace ns3
           m_protocolName = "DSDV";
           break;
         case 4:
-          m_protocolName = "DSR";
+          list.Add (ripRouting, 100);
+          m_protocolName = "RIP";
           break;
         default:
           NS_FATAL_ERROR ("No such protocol:" << m_protocol);
       }
 
-    /* install ad hoc routing */
-    if (m_protocol < 4)
-    {
-      internet.SetRoutingHelper (list);
-      internet.Install (c);
-    }
+    internet.SetRoutingHelper (list);
+    internet.Install (c);
 
-    if (m_protocol == 4)
-    {
-      internet.Install (c);
-      dsrMain.Install (dsr, c);      
-    }
 
     /* create links */
     std::vector<NodeContainer> links;
     links.resize (numNodes-1);
 
     /******* Network Devic Start *******/
-    WifiHelper wifi;
-    wifi.SetStandard (WIFI_STANDARD_80211b);
+    // WifiHelper wifi;
+    // wifi.SetStandard (WIFI_STANDARD_80211n);
 
     YansWifiPhyHelper wifiPhy;
     YansWifiChannelHelper wifiChannel = YansWifiChannelHelper::Default ();
@@ -174,14 +176,11 @@ namespace ns3
     /******* need to provide mobility *******/
 
     Ipv4AddressHelper address;
-    address.SetBase ("10.1.1.0", "255.255.255.0");
     std::vector<Ipv4InterfaceContainer> interfaces;
     interfaces.resize (numNodes-1);
 
-    /* application setting (temporary) */
-    OnOffHelper onoff1 ("ns3::UdpSocketFactory",Address ());
-    onoff1.SetAttribute ("OnTime", StringValue ("ns3::ConstantRandomVariable[Constant=1.0]"));
-    onoff1.SetAttribute ("OffTime", StringValue ("ns3::ConstantRandomVariable[Constant=0.0]"));
+    // PointToPointHelper p2p;
+    // p2p.SetDeviceAttribute ("DataRate", StringValue ("16Mbps"));
 
     for(size_t i=0;i < links.size();i++)
     {
@@ -191,12 +190,33 @@ namespace ns3
 
       /* install channel on link */   
       devices[i] = wifi.Install (wifiPhy, wifiMac, links[i]);
+      // devices[i] = p2p.Install (links[i]);
 
       /* assign addresses */
+      char base_addr[20];
+      sprintf(base_addr,"10.0.%lu.0",i);
+      address.SetBase (base_addr, "255.255.255.0");
       interfaces[i] = address.Assign (devices[i]);
     }
 
-    if (printRoutingTables)
+    /* application setting (temporary) */
+    /* get destination address */
+    auto destAddr = interfaces[0].GetAddress (0);
+
+    uint32_t packetSize = 1024;
+    Time interPacketInterval = Seconds (1.0);
+    V4PingHelper ping ( destAddr );
+    ping.SetAttribute ("Interval", TimeValue (interPacketInterval));
+    ping.SetAttribute ("Size", UintegerValue (packetSize));
+    ping.SetAttribute ("Verbose", BooleanValue (true));
+
+    ApplicationContainer apps = ping.Install (c.Get (srcIdx));
+    apps.Start (Seconds (1.0));
+    apps.Stop (Seconds (110.0));
+
+    Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
+
+    if (m_printRoutingTable)
       {
         RipHelper routingHelper;
 
@@ -210,12 +230,9 @@ namespace ns3
           routingHelper.PrintRoutingTableAt (Seconds (60.0), c.Get (i), routingStream);
         }
 
-        for(size_t i=0; i<numNodes; i++){
-          routingHelper.PrintRoutingTableAt (Seconds (90.0), c.Get (i), routingStream);
-        }
-
       }
 
+    Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
 
     NS_LOG_INFO ("Run Simulation.");
     Simulator::Stop (Seconds (60));

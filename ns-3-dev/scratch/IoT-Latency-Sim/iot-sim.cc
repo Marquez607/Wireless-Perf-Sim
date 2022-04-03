@@ -47,7 +47,8 @@ namespace ns3
     m_CSVfileName ("manet-routing.output.csv"),
     m_protocol (2), // AODV
     m_hops (1),
-    m_bidir(false)
+    m_bidir(false),
+    m_printRoutingTable(false)
   {
   }
 
@@ -58,7 +59,8 @@ namespace ns3
     cmd.AddValue ("CSVfileName", "The name of the CSV output file name", m_CSVfileName);
     cmd.AddValue ("hops", "How many intermediate nodes between sink and source", m_hops);
     cmd.AddValue ("protocol", "1=OLSR;2=AODV;3=DSDV,4=DSR", m_protocol);
-    cmd.AddValue ("Bidir", "Bidirectional End-to-End test enable", m_bidir);
+    cmd.AddValue ("Bidir", "Bidirectional End-to-End test enable[false]", m_bidir);
+    cmd.AddValue ("printRoutingTable", "Print routing table for each node[false]", m_printRoutingTable);
     cmd.Parse (argc, argv);
     return m_CSVfileName;
   }
@@ -139,15 +141,12 @@ namespace ns3
     std::vector<NodeContainer> links;
     links.resize (numNodes-1);
 
-    /* Physical Layer */
-    // setting up wifi phy and channel using helpers
+    /******* Network Devic Start *******/
     WifiHelper wifi;
     wifi.SetStandard (WIFI_STANDARD_80211b);
 
     YansWifiPhyHelper wifiPhy;
-    YansWifiChannelHelper wifiChannel;
-    wifiChannel.SetPropagationDelay ("ns3::ConstantSpeedPropagationDelayModel");
-    wifiChannel.AddPropagationLoss ("ns3::FriisPropagationLossModel");
+    YansWifiChannelHelper wifiChannel = YansWifiChannelHelper::Default ();
     wifiPhy.SetChannel (wifiChannel.Create ());
 
     // Add a mac and disable rate control
@@ -162,6 +161,28 @@ namespace ns3
     std::vector<NetDeviceContainer> devices;
     devices.resize (numNodes-1);
 
+    /******* Network Devic End *********/
+
+    /******* need to provide mobility *******/
+    /* 
+     * not worried about mobility in this use case
+     */
+     MobilityHelper mobility; 
+     mobility.SetMobilityModel ("ns3::ConstantPositionMobilityModel");
+     mobility.Install (c); // make all nodes constant position
+
+    /******* need to provide mobility *******/
+
+    Ipv4AddressHelper address;
+    address.SetBase ("10.1.1.0", "255.255.255.0");
+    std::vector<Ipv4InterfaceContainer> interfaces;
+    interfaces.resize (numNodes-1);
+
+    /* application setting (temporary) */
+    OnOffHelper onoff1 ("ns3::UdpSocketFactory",Address ());
+    onoff1.SetAttribute ("OnTime", StringValue ("ns3::ConstantRandomVariable[Constant=1.0]"));
+    onoff1.SetAttribute ("OffTime", StringValue ("ns3::ConstantRandomVariable[Constant=0.0]"));
+
     for(size_t i=0;i < links.size();i++)
     {
       /* link */
@@ -170,12 +191,31 @@ namespace ns3
 
       /* install channel on link */   
       devices[i] = wifi.Install (wifiPhy, wifiMac, links[i]);
+
+      /* assign addresses */
+      interfaces[i] = address.Assign (devices[i]);
     }
 
-    /* 
-     * enable pcap on all nodes, we'll figure out our End-to-End
-     * targets based on static IPs we allot each node 
-     */
+    if (printRoutingTables)
+      {
+        RipHelper routingHelper;
+
+        Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper> (&std::cout);
+
+        for(size_t i=0; i<numNodes; i++){
+          routingHelper.PrintRoutingTableAt (Seconds (30.0), c.Get (i), routingStream);
+        }
+
+        for(size_t i=0; i<numNodes; i++){
+          routingHelper.PrintRoutingTableAt (Seconds (60.0), c.Get (i), routingStream);
+        }
+
+        for(size_t i=0; i<numNodes; i++){
+          routingHelper.PrintRoutingTableAt (Seconds (90.0), c.Get (i), routingStream);
+        }
+
+      }
+
 
     NS_LOG_INFO ("Run Simulation.");
     Simulator::Stop (Seconds (60));
@@ -185,4 +225,47 @@ namespace ns3
 
   }
 
+  static inline std::string
+  PrintReceivedPacket (Ptr<Socket> socket, Ptr<Packet> packet, Address senderAddress)
+  {
+    std::ostringstream oss;
+
+    oss << Simulator::Now ().GetSeconds () << " " << socket->GetNode ()->GetId ();
+
+    if (InetSocketAddress::IsMatchingType (senderAddress))
+      {
+        InetSocketAddress addr = InetSocketAddress::ConvertFrom (senderAddress);
+        oss << " received one packet from " << addr.GetIpv4 ();
+      }
+    else
+      {
+        oss << " received one packet!";
+      }
+    return oss.str ();
+  }
+
+  void
+  IoTHardwareSim::ReceivePacket (Ptr<Socket> socket)
+  {
+    Ptr<Packet> packet;
+    Address senderAddress;
+    while ((packet = socket->RecvFrom (senderAddress)))
+      {
+        bytesTotal += packet->GetSize ();
+        packetsReceived += 1;
+        NS_LOG_UNCOND (PrintReceivedPacket (socket, packet, senderAddress));
+      }
+  }
+
+  Ptr<Socket>
+  IoTHardwareSim::SetupPacketReceive (Ipv4Address addr, Ptr<Node> node)
+  {
+    TypeId tid = TypeId::LookupByName ("ns3::UdpSocketFactory");
+    Ptr<Socket> sink = Socket::CreateSocket (node, tid);
+    InetSocketAddress local = InetSocketAddress (addr, port);
+    sink->Bind (local);
+    sink->SetRecvCallback (MakeCallback (&IoTHardwareSim::ReceivePacket, this));
+
+    return sink;
+  }
 }

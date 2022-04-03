@@ -57,6 +57,7 @@ namespace ns3
     uint32_t m_protocol;
     uint32_t m_hops; /*how many intermediate nodes between sink and source*/ 
     bool m_bidir;
+    bool m_printRoutingTable;
     // bool m_tracing;
     // bool m_verbose;
   };

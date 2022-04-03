@@ -12,6 +12,9 @@
  *              and low latency (may also support 6LoPan later ,but will have
  *              much lower data rate)
  * 
+ * NOTE: HAD TO P2P FOR NOW, ROUTING DID NOT LIKE OTHER METHODS 
+ *      ( NEED TO INVESTIGATE )
+ * 
  * Nodes will emulate below system for now (not technically mesh): CC3235
  * Datarate : 16Mbps UDP : 13Mbps TCP
  * https://www.ti.com/lit/ds/symlink/cc3235s.pdf?ts=1648917856121&ref_url=https%253A%252F%252Fwww.ti.com%252Fproduct%252FCC3235S
@@ -41,6 +44,7 @@
 #include "ns3/ipv4-routing-table-entry.h"
 #include "ns3/internet-apps-module.h"
 #include "ns3/point-to-point-module.h"
+#include "ns3/mesh-helper.h"
 
 #include "iot-sim.h"
 
@@ -57,7 +61,8 @@ namespace ns3
     m_protocol (4), // RIP not adhoc routing
     m_hops (1),
     m_bidir(false),
-    m_printRoutingTable(false)
+    m_printRoutingTable(false),
+    m_pcap(false)
   {
   }
 
@@ -70,6 +75,7 @@ namespace ns3
     cmd.AddValue ("protocol", "1=OLSR;2=AODV;3=DSDV,4=RIP", m_protocol);
     cmd.AddValue ("Bidir", "Bidirectional End-to-End test enable[false]", m_bidir);
     cmd.AddValue ("printRoutingTable", "Print routing table for each node[false]", m_printRoutingTable);
+    cmd.AddValue ("pcap", "Enable pcap output[false]", m_pcap);
     cmd.Parse (argc, argv);
     return m_CSVfileName;
   }
@@ -144,21 +150,28 @@ namespace ns3
     links.resize (numNodes-1);
 
     /******* Network Devic Start *******/
+
+    // MeshHelper mesh = MeshHelper::Default ();
+    // mesh.SetStackInstaller ("ns3::Dot11sStack");
+    // mesh.SetSpreadInterfaceChannels (MeshHelper::ZERO_CHANNEL);
+    // mesh.SetMacType ("RandomStart", TimeValue (Seconds (0.1)));
+
+    // YansWifiPhyHelper wifiPhy;
+    // YansWifiChannelHelper wifiChannel = YansWifiChannelHelper::Default ();
+    // wifiPhy.SetChannel (wifiChannel.Create ());
+    // if (m_pcap)
+    //   wifiPhy.EnablePcapAll (std::string ("mp-"));
     // WifiHelper wifi;
     // wifi.SetStandard (WIFI_STANDARD_80211n);
 
-    YansWifiPhyHelper wifiPhy;
-    YansWifiChannelHelper wifiChannel = YansWifiChannelHelper::Default ();
-    wifiPhy.SetChannel (wifiChannel.Create ());
-
     // Add a mac and disable rate control
-    WifiMacHelper wifiMac;
-    std::string phyMode ("DsssRate11Mbps");
-    wifi.SetRemoteStationManager ("ns3::ConstantRateWifiManager",
-                                  "DataMode",StringValue (phyMode),
-                                  "ControlMode",StringValue (phyMode));
+    // WifiMacHelper wifiMac;
+    // std::string phyMode ("DsssRate11Mbps");
+    // wifi.SetRemoteStationManager ("ns3::ConstantRateWifiManager",
+    //                               "DataMode",StringValue (phyMode),
+    //                               "ControlMode",StringValue (phyMode));
 
-    wifiMac.SetType ("ns3::AdhocWifiMac");
+    // wifiMac.SetType ("ns3::AdhocWifiMac");
 
     std::vector<NetDeviceContainer> devices;
     devices.resize (numNodes-1);
@@ -179,8 +192,8 @@ namespace ns3
     std::vector<Ipv4InterfaceContainer> interfaces;
     interfaces.resize (numNodes-1);
 
-    // PointToPointHelper p2p;
-    // p2p.SetDeviceAttribute ("DataRate", StringValue ("16Mbps"));
+    PointToPointHelper p2p;
+    p2p.SetDeviceAttribute ("DataRate", StringValue ("16Mbps"));
 
     for(size_t i=0;i < links.size();i++)
     {
@@ -189,8 +202,9 @@ namespace ns3
       links[i].Add (c.Get (i+1));
 
       /* install channel on link */   
-      devices[i] = wifi.Install (wifiPhy, wifiMac, links[i]);
-      // devices[i] = p2p.Install (links[i]);
+      // devices[i] = wifi.Install (wifiPhy, wifiMac, links[i]);
+      devices[i] = p2p.Install (links[i]);
+      // devices[i] = mesh.Install (wifiPhy, links[i]);
 
       /* assign addresses */
       char base_addr[20];

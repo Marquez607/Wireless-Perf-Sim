@@ -10,7 +10,6 @@ This framework will either be a modification of ns3 or implented as a ns3 script
 
 ## System Outputs 
 * Latency -> how long it takes for a packet to reach its destination 
-* Throughput -> successful packet receptions per unit of time ( End-to-End ) 
 * Jitter -> changes in latency 
 
 ## System Inputs

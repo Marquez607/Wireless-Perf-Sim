@@ -1,0 +1,10 @@
+600 - 700 us for basic case
+
+Test pseudo code
+
+while( client connected ){
+
+  toggle_gpio();
+  send_packet();
+
+}

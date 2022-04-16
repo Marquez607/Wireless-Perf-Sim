@@ -59,6 +59,9 @@ namespace ns3
     bool m_bidir;
     bool m_printRoutingTable;
     bool m_pcap;
+    uint32_t m_hw_delay;
+    double m_time_sec;
+    
     // bool m_tracing;
     // bool m_verbose;
   };

@@ -59,11 +59,13 @@ namespace ns3
     bytesTotal (0),
     packetsReceived (0),
     m_CSVfileName ("manet-routing.output.csv"),
-    m_protocol (4), // RIP not adhoc routing
+    m_protocol (2),
     m_hops (1),
     m_bidir(false),
     m_printRoutingTable(false),
-    m_pcap(false)
+    m_pcap(false),
+    m_hw_delay(0),
+    m_time_sec(60)
   {
   }
 
@@ -77,6 +79,8 @@ namespace ns3
     cmd.AddValue ("Bidir", "Bidirectional End-to-End test enable[false]", m_bidir);
     cmd.AddValue ("printRoutingTable", "Print routing table for each node[false]", m_printRoutingTable);
     cmd.AddValue ("pcap", "Enable pcap output[false]", m_pcap);
+    cmd.AddValue ("hwdelay","added hw processing delay (ms)",m_hw_delay);
+    cmd.AddValue ("time_sec","How long the sim should run for (seconds)",m_time_sec);
     cmd.Parse (argc, argv);
     return m_CSVfileName;
   }
@@ -130,14 +134,14 @@ namespace ns3
           list.Add (aodv, 100);
           m_protocolName = "AODV";
           break;
-        case 3:
-          list.Add (dsdv, 100);
-          m_protocolName = "DSDV";
-          break;
-        case 4:
-          list.Add (ripRouting, 100);
-          m_protocolName = "RIP";
-          break;
+        // case 3:
+        //   list.Add (dsdv, 100);
+        //   m_protocolName = "DSDV";
+        //   break;
+        // case 4:
+        //   list.Add (ripRouting, 100);
+        //   m_protocolName = "RIP";
+        //   break;
         default:
           NS_FATAL_ERROR ("No such protocol:" << m_protocol);
       }
@@ -145,34 +149,9 @@ namespace ns3
     internet.SetRoutingHelper (list);
     internet.Install (c);
 
-
     /* create links */
     std::vector<NodeContainer> links;
     links.resize (numNodes-1);
-
-    /******* Network Devic Start *******/
-
-    // MeshHelper mesh = MeshHelper::Default ();
-    // mesh.SetStackInstaller ("ns3::Dot11sStack");
-    // mesh.SetSpreadInterfaceChannels (MeshHelper::ZERO_CHANNEL);
-    // mesh.SetMacType ("RandomStart", TimeValue (Seconds (0.1)));
-
-    // YansWifiPhyHelper wifiPhy;
-    // YansWifiChannelHelper wifiChannel = YansWifiChannelHelper::Default ();
-    // wifiPhy.SetChannel (wifiChannel.Create ());
-    // if (m_pcap)
-    //   wifiPhy.EnablePcapAll (std::string ("mp-"));
-    // WifiHelper wifi;
-    // wifi.SetStandard (WIFI_STANDARD_80211n);
-
-    // Add a mac and disable rate control
-    // WifiMacHelper wifiMac;
-    // std::string phyMode ("DsssRate11Mbps");
-    // wifi.SetRemoteStationManager ("ns3::ConstantRateWifiManager",
-    //                               "DataMode",StringValue (phyMode),
-    //                               "ControlMode",StringValue (phyMode));
-
-    // wifiMac.SetType ("ns3::AdhocWifiMac");
 
     std::vector<NetDeviceContainer> devices;
     devices.resize (numNodes-1);
@@ -198,7 +177,7 @@ namespace ns3
 
     CsmaHelper csma;
     csma.SetChannelAttribute ("DataRate", DataRateValue (5000000));
-    csma.SetChannelAttribute ("Delay", TimeValue (MilliSeconds (0)));
+    csma.SetChannelAttribute ("Delay", TimeValue (MilliSeconds (m_hw_delay)));
 
     for(size_t i=0;i < links.size();i++)
     {
@@ -254,7 +233,7 @@ namespace ns3
     //Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
 
     NS_LOG_INFO ("Run Simulation.");
-    Simulator::Stop (Seconds (60));
+    Simulator::Stop (Seconds (m_time_sec));
     Simulator::Run ();
     Simulator::Destroy ();
     NS_LOG_INFO ("Done.");

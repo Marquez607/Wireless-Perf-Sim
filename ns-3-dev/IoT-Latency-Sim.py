@@ -23,6 +23,7 @@ DSR not currently supported
 import configparser as cfg
 import argparse
 import PySimpleGUI as sg
+import numpy as np
 import subprocess
 import os
 import sys
@@ -47,19 +48,25 @@ def parse_cfg(file):
     config = cfg.ConfigParser()
     config.read(file)
     
-    try: 
-        return config['SIM']['hwdelay'],config['SIM']['time_sec'], \
-               config['SIM']['hops'],config['SIM']['protocol'].upper()
-    except:
-        pass 
 
-def run_sim(hwdelay,time_sec,hops,routing,fout = "../IoT-Sim-Out.txt"):
+    try: 
+        print("========== SIMULATION PARAMETERS ===========")
+        for key,val in config['SIM'].items():
+            print(key,val)
+        print("========== SIMULATION PARAMETERS ===========")
+        return config['SIM']['hwdelay'],config['SIM']['time_sec'], \
+               config['SIM']['hops'],config['SIM']['protocol'].upper(),config['SIM']['packetsize']
+    except:
+        return None 
+
+def run_sim(hwdelay,time_sec,hops,routing,packetsize,fout = "../IoT-Sim-Out.txt"):
 
     os.system(f'''./waf --run \"IoT-Latency-Sim 
                 --hwdelay={hwdelay} 
                 --time_sec={time_sec} 
                 --hops={hops} 
                 --protocol={protomap[routing]}
+                --packetsize={packetsize}
                 \" > {fout} 
                 ''')
 
@@ -68,19 +75,27 @@ def test_sim():
 
 
 def parse_latency(fout):
+    data = []
     with open(fout,"r+") as f:
         for line in f.readlines():
             print(line)
+            #ret = re.findall("time=+\d+\.\d+ms",line)
+            ret = re.findall("time=\+(\d+\.\d+)ms",line)
+            if ret:
+                data += [float(ret[0])]
+        #print(data)
+
+    
 
 if __name__ == "__main__":
 
     config,outfile = parse_args()
-    delay,time,hops,proto = parse_cfg(config)
+    delay,time,hops,proto,packetsize= parse_cfg(config)
 
     if proto not in protomap.keys(): 
         print(f"ERROR: {proto} NOT A VALID PROTOCOL TO SELECT")
         exit()
 
-    run_sim(delay,time,hops,proto,outfile)
+    run_sim(delay,time,hops,proto,packetsize,outfile)
 
     parse_latency(outfile)

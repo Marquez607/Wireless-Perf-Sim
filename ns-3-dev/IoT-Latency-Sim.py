@@ -55,14 +55,22 @@ def parse_cfg(file):
 
 def run_sim(hwdelay,time_sec,hops,routing,fout = "../IoT-Sim-Out.txt"):
 
-    os.system("./waf --run IoT-Latency-Sim")
+    os.system(f'''./waf --run \"IoT-Latency-Sim 
+                --hwdelay={hwdelay} 
+                --time_sec={time_sec} 
+                --hops={hops} 
+                --protocol={protomap[routing]}
+                \" > {fout} 
+                ''')
 
 def test_sim():
     os.system("./waf --run \"IoT-Latency-Sim --protocol=2\"")
 
 
 def parse_latency(fout):
-    pass
+    with open(fout,"r+") as f:
+        for line in f.readlines():
+            print(line)
 
 if __name__ == "__main__":
 

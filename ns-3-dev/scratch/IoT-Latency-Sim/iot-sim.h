@@ -61,7 +61,8 @@ namespace ns3
     bool m_pcap;
     uint32_t m_hw_delay;
     double m_time_sec;
-    
+    uint32_t m_packetsize;
+
     // bool m_tracing;
     // bool m_verbose;
   };

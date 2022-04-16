@@ -65,7 +65,8 @@ namespace ns3
     m_printRoutingTable(false),
     m_pcap(false),
     m_hw_delay(0),
-    m_time_sec(60)
+    m_time_sec(60),
+    m_packetsize(1024)
   {
   }
 
@@ -81,6 +82,7 @@ namespace ns3
     cmd.AddValue ("pcap", "Enable pcap output[false]", m_pcap);
     cmd.AddValue ("hwdelay","added hw processing delay (ms)",m_hw_delay);
     cmd.AddValue ("time_sec","How long the sim should run for (seconds)",m_time_sec);
+    cmd.AddValue ("packetsize","Size of packets",m_packetsize);
     cmd.Parse (argc, argv);
     return m_CSVfileName;
   }
@@ -201,7 +203,7 @@ namespace ns3
     /* get destination address */
     auto destAddr = interfaces[0].GetAddress (0);
 
-    uint32_t packetSize = 1024;
+    uint32_t packetSize = m_packetsize;
     Time interPacketInterval = Seconds (1.0);
     V4PingHelper ping ( destAddr );
     ping.SetAttribute ("Interval", TimeValue (interPacketInterval));

@@ -78,15 +78,21 @@ def parse_latency(fout):
     data = []
     with open(fout,"r+") as f:
         for line in f.readlines():
-            print(line)
+            #print(line)
             #ret = re.findall("time=+\d+\.\d+ms",line)
             ret = re.findall("time=\+(\d+\.\d+)ms",line)
             if ret:
-                data += [float(ret[0])]
+                data += [float(ret[0])/2] #divide by 2 to get unidirection latency
         #print(data)
-
     
-
+    jitter = np.abs(np.diff(data))
+    avg_jitter = np.sum(jitter)/len(jitter)
+    avg_lat = np.sum(data)/len(data)
+    print("============ SUMMARY STATS ==================")
+    print(f"AVG LATENCY: {avg_lat}")
+    print(f"AVG JITTER: {avg_jitter}")
+    print("============ SUMMARY STATS ==================")
+    
 if __name__ == "__main__":
 
     config,outfile = parse_args()

@@ -1,0 +1,37 @@
+Waf: Entering directory `/home/marquez/Desktop/EEL6591/Wireless-Perf-Sim/ns-3-dev/build'
+Waf: Leaving directory `/home/marquez/Desktop/EEL6591/Wireless-Perf-Sim/ns-3-dev/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (0.982s)
+PING 10.0.0.1 - 1024 bytes of data - 1052 bytes including ICMP and IPv4 headers.
+1032 bytes from 10.0.0.1: icmp_seq=0 ttl=62 time=+307.534ms
+1032 bytes from 10.0.0.1: icmp_seq=1 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=2 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=3 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=4 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=5 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=6 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=7 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=8 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=9 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=10 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=11 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=12 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=13 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=14 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=15 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=16 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=17 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=18 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=19 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=20 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=21 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=22 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=23 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=24 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=25 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=26 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=27 ttl=62 time=+16.273ms
+1032 bytes from 10.0.0.1: icmp_seq=28 ttl=62 time=+16.273ms
+--- 10.0.0.1 ping statistics ---
+29 packets transmitted, 29 received, 0% packet loss, time +2.9e+04ms
+rtt min/avg/max/mdev = 16/26.03/307/54.04 ms

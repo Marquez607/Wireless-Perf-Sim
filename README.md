@@ -3,22 +3,49 @@ EEL6591 project for implementing a simulation framework for testing Ad Hoc End t
 
 This framework will either be a modification of ns3 or implented as a ns3 script. The project is also still in ideation stage, but will evaluate some network performance metrics regardless. It could be modified to compare different topologies together. Framework inputs are also still in the ideation stage. I would personally like to investigate heavily modifying the node applications or some of the NIC to mix in different bitrate demands per node.
 
+## How to Use Tool Brief
+
+### Python Wrapper 
+The intented way to use this tool is to use the IoT-Latency-Sim.p wrapper developed in the ***ns-3-dev*** folder. \
+Note: script must ran out of the ns-3-dev directory and you must pass in a configuration file.
+```
+cd ns-3-dev
+python3 IoT-Latency-Sim --config=config.cfg
+
+```
+### Config File Example
+All fields must be populated for this simulation to work. \
+Two example configs provided in example_configs folder 
+
+* hwdelay - user measured process delay in units of milliseconds 
+* time_sec - time to run sim in units of seconds
+* hops - number of hops the user wishes to measure 
+* protocol - routing can either be AODV or OLSR for now. 
+* packetsize - how large the packets should be in bytes
+```
+[SIM]
+hwdelay = 1
+time_sec = 60
+hops = 3
+protocol = AODV
+packetsize = 1024
+```
+
 ## Real-Time Definitions
 * Soft Real-Time -> missing deadlines results in degredation of service (gaming, video/audio streaming) 
 * Firm  Real-Time -> missing deadlines results in service no longer be useful (GPS and other data that can "expire" ) 
 * Hard Real-Time -> missing deadlines results in critical failure of system 
 
 ## System Outputs 
-* Latency -> how long it takes for a packet to reach its destination 
-* Jitter -> changes in latency 
+* Latency -> how long it takes for a packet to reach its destination ( average )
+* Jitter -> changes in latency ( average )
 
 ## System Inputs
 **Still in planning, the goal is to make a tool that's useful for network design** 
-* Number of Nodes -> how many relevant nodes are in the system 
-* Hardware Constraints -> I'd like to simulate hardware performance of each node 
-this could possibly emulate having a mixture of nodes performances. This could be as simple as distributing a delay parameter amongst the different nodes that get tacked on when a message arrives to them. 
-* Routing protocol -> currently NS3 has support for selecting routing protocols; an extension might be to allow the user to input a custom one. 
-                       
+* Number of Hops -> how many relevant nodes are in the system 
+* Hardware Constraints -> Currently implemented as a fixed delay per hop that the user must measure from available hardware 
+* Routing protocol -> Tool Supports AODV and OLSR for now 
+* Time -> how long in seconds the simulation should run
 
 # To Review 
 This section includes relevant links to understanding the project. Please review the ns3 tutorial to understand the development environment. NS3 only runs in a linux environnment currently which means either WSL,a linux VM, or a Linux dual boot. We're interested in using ns3 for the wirless case. 
@@ -44,5 +71,3 @@ This is the ns3 source code directly with a few scripts I've tried out in the sc
 ## Papers
 Papers that I've found so far that have some relevant issue or can be used to extrapolate what kind of KPIs (Key Performance Indicators ) we can extend our framework to evaluate. 
 
-# Motivator
-# Task List
